@@ -1,0 +1,18 @@
+services:
+  mqtt:
+    build: .
+    container_name: mqtt-broker
+    restart: unless-stopped
+    environment:
+      - MQTT_USERNAME=mqtt
+      - MQTT_PASSWORD=lasdpc
+      - ALLOW_ANONYMOUS=false
+      - MQTT_PORT=1883
+      - WS_ENABLED=true
+      - WS_PORT=9001
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto-data:/mosquitto/data
+      - ./mosquitto-log:/mosquitto/log

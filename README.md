@@ -1,93 +1,93 @@
-# 🚀 MQTT Broker con Docker Compose
+# 🚀 MQTT Broker with Docker Compose
 
-Este proyecto levanta un broker **Eclipse Mosquitto** en un contenedor Docker, con autenticación de usuario/contraseña y soporte opcional de WebSockets.
-
----
-
-## 📦 Requisitos previos
-
-- Tener Docker y Docker Compose instalados.
-- Puerto `1883` (MQTT TCP) libre en tu host.  
-  *(Si ya tienes otro Mosquitto corriendo en el sistema, deténlo o cambia el puerto en `docker-compose.yml`).*
+This project deploys an **Eclipse Mosquitto** broker in a Docker container, with username/password authentication and optional WebSocket support.
 
 ---
 
-## ▶️ Ejecución
+## 📦 Prerequisites
 
-1. Clona este repositorio o copia los archivos (`docker-compose.yml`, `Dockerfile`, `docker-entrypoint.sh`).
+- Docker and Docker Compose installed.
+- Port `1883` (MQTT TCP) available on your host.
+  *(If you already have another Mosquitto instance running, stop it or change the port in `docker-compose.yml`).*
 
-2. Levanta el contenedor:
+---
+
+## ▶️ Running
+
+1. Clone this repository or copy the files (`docker-compose.yml`, `Dockerfile`, `docker-entrypoint.sh`).
+
+2. Start the container:
 
    ```bash
    docker compose build --no-cache
    docker compose up -d
    ```
 
-3. Verifica que el contenedor esté en ejecución:
+3. Verify that the container is running:
 
    ```bash
    docker ps
    docker logs -f mqtt-broker
    ```
 
-   Debes ver un mensaje como:
+   You should see a message like:
    ```
-   ==> Iniciando Mosquitto en 0.0.0.0:1883 (WS:9001)
+   ==> Starting Mosquitto on 0.0.0.0:1883 (WS:9001)
    mosquitto version 2.x.x starting
    ```
 
 ---
 
-## 🔑 Credenciales por defecto
+## 🔑 Default Credentials
 
-- **Usuario:** `mqtt`  
-- **Password:** `lasdpc`  
-- **Puerto TCP MQTT:** `1883`  
-- **Puerto WebSocket:** `9001`
+- **Username:** `mqtt`
+- **Password:** `lasdpc`
+- **MQTT TCP Port:** `1883`
+- **WebSocket Port:** `9001`
 
-> Puedes cambiar estos valores en `docker-compose.yml` dentro de la sección `environment`.
+> You can change these values in `docker-compose.yml` under the `environment` section.
 
 ---
 
-## 🧪 Prueba del broker
+## 🧪 Testing the Broker
 
-### 1. Suscribirse a un tópico
+### 1. Subscribe to a topic
 
-En una terminal abre un cliente suscriptor:
+Open a terminal and run a subscriber client:
 
 ```bash
 mosquitto_sub -h localhost -p 1883 -u "mqtt" -P "lasdpc" -t "test/topic" -v
 ```
 
-Quedará esperando mensajes.
+It will wait for incoming messages.
 
 ---
 
-### 2. Publicar un mensaje
+### 2. Publish a message
 
-En otra terminal publica un mensaje al mismo tópico:
+In another terminal, publish a message to the same topic:
 
 ```bash
-mosquitto_pub -h localhost -p 1883 -u "mqtt" -P "lasdpc" -t "test/topic" -m "Hola MQTT desde Docker!"
+mosquitto_pub -h localhost -p 1883 -u "mqtt" -P "lasdpc" -t "test/topic" -m "Hello MQTT from Docker!"
 ```
 
-Deberías ver en la terminal suscriptora:
+You should see in the subscriber terminal:
 
 ```
-test/topic Hola MQTT desde Docker!
+test/topic Hello MQTT from Docker!
 ```
 
 ---
 
-## 🛑 Detener y limpiar
+## 🛑 Stop and Clean
 
-Para detener el servicio:
+To stop the service:
 
 ```bash
 docker compose down
 ```
 
-Si quieres reconstruir desde cero (limpiando volúmenes):
+If you want to rebuild everything from scratch (including volumes):
 
 ```bash
 docker compose down -v
@@ -97,15 +97,16 @@ docker compose up -d
 
 ---
 
-## 📌 Notas
+## 📌 Notes
 
-- Si quieres habilitar conexiones **anónimas** (sin usuario/contraseña) para pruebas rápidas, edita `docker-compose.yml`:
+- If you want to enable **anonymous connections** (no username/password) for quick testing, edit `docker-compose.yml`:
 
   ```yaml
   environment:
     - ALLOW_ANONYMOUS=true
   ```
 
-- Recuerda que no es recomendable exponer un broker anónimo en redes públicas.
+- Keep in mind that exposing an anonymous broker on public networks is not recommended.
 
 ---
+
